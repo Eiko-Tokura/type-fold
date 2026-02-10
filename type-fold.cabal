@@ -16,6 +16,10 @@ license: MIT
 license-file: LICENSE
 category: Data, Type-Level Programming
 
+source-repository head
+    type: git
+    location: https://github.com/Eiko-Tokura/type-fold.git
+
 common warnings
     ghc-options: -Wall
 
