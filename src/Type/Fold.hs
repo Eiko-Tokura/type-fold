@@ -59,10 +59,13 @@ foldT_ t = foldT @_ @t
 type instance RecursiveInput '[]      r = ()
 type instance RecursiveInput (x : xs) r = r
 
+-- | Nil case, the user provides an 'r'
 instance TypeFoldStep ('[] :: [a]) r => TypeFold ('[] :: [a]) r where
   foldT = foldStep @_ @('[] :: [a]) ()
   {-# INLINE foldT #-}
 
+-- | Think of the 'TypeFoldStep (x : xs) r' as 'a -> r -> r'.
+-- The user provides an 'r -> r' based on the type 'x'.
 instance (TypeFoldStep (x ': xs :: [a]) r, TypeFold xs r) => TypeFold (x ': xs :: [a]) r where
   foldT = foldStep @_ @(x : xs :: [a]) $ foldT_ xs
   {-# INLINE foldT #-}
