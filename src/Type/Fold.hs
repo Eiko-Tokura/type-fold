@@ -19,8 +19,6 @@
 --
 -- The `TypeFold` type class serves as a marker for types that can be folded, while the `RecursiveInput`
 -- type family defines the input type for each folding step.
---
--- The `foldStep_` and `foldT_` functions provide convenient ways to invoke the folding logic defined by the user.
 module Type.Fold where
 
 import Data.Kind (Type)
