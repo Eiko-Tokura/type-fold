@@ -26,6 +26,9 @@ import Data.Kind (Type)
 class TypeFold (t :: k) (r :: Type) where
   foldT :: r
 
+-- | A type family that defines the input type for each folding step
+--
+-- typically includes all the returned values from folding the children
 type family   RecursiveInput (t :: k) (r :: Type) :: Type
 
 -- | Meant to be implemented by downstream users to provide custom folding logic
@@ -38,10 +41,12 @@ class TypeFoldStep (t :: k) (r :: Type) where
 -- exists if ghc >= 9.10
 foldStep_ :: forall t -> TypeFoldStep t r => RecursiveInput t r -> r
 foldStep_ t = foldStep @_ @t
+{-# INLINE foldStep_ #-}
 
 -- | Helper function that uses RequiredTypeArguments
 --
 -- exists if ghc >= 9.10
 foldT_ :: forall t -> TypeFold t r => r
 foldT_ t = foldT @_ @t
+{-# INLINE foldT_ #-}
 #endif
