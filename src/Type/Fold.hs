@@ -67,5 +67,5 @@ instance TypeFoldStep ('[] :: [a]) r => TypeFold ('[] :: [a]) r where
 -- | Think of the 'TypeFoldStep (x : xs) r' as 'a -> r -> r'.
 -- The user provides an 'r -> r' based on the type 'x'.
 instance (TypeFoldStep (x ': xs :: [a]) r, TypeFold xs r) => TypeFold (x ': xs :: [a]) r where
-  foldT = foldStep @_ @(x : xs :: [a]) $ foldT_ xs
+  foldT = foldStep @_ @(x : xs :: [a]) $ foldT @_ @xs
   {-# INLINE foldT #-}

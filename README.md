@@ -18,7 +18,6 @@ Let's see an example, folding `[Natural]` to `Integer`:
 {-# LANGUAGE TypeOperators         #-}
 {-# OPTIONS_GHC -Wno-orphans       #-}
 import Data.Proxy
-import Data.Type.Equality
 import GHC.TypeLits
 import Type.Fold
 
