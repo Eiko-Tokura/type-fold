@@ -36,15 +36,15 @@ type family   RecursiveInput (t :: k) (r :: Type) :: Type
 
 -- | Meant to be implemented by downstream users to provide custom folding logic
 class TypeFoldStep (t :: k) (r :: Type) where
-  foldStep :: RecursiveInput t r -> r
+  foldTStep :: RecursiveInput t r -> r
 
 #if __GLASGOW_HASKELL__ >= 910
 -- | Helper function that uses RequiredTypeArguments
 --
 -- exists if ghc >= 9.10
-foldStep_ :: forall t -> TypeFoldStep t r => RecursiveInput t r -> r
-foldStep_ t = foldStep @_ @t
-{-# INLINE foldStep_ #-}
+foldTStep_ :: forall t -> TypeFoldStep t r => RecursiveInput t r -> r
+foldTStep_ t = foldTStep @_ @t
+{-# INLINE foldTStep_ #-}
 
 -- | Helper function that uses RequiredTypeArguments
 --
@@ -59,11 +59,11 @@ type instance RecursiveInput (x : xs) r = r
 
 -- | Nil case, the user provides an 'r'
 instance TypeFoldStep ('[] :: [a]) r => TypeFold ('[] :: [a]) r where
-  foldT = foldStep @_ @('[] :: [a]) ()
+  foldT = foldTStep @_ @('[] :: [a]) ()
   {-# INLINE foldT #-}
 
 -- | Think of the 'TypeFoldStep (x : xs) r' as 'a -> r -> r'.
 -- The user provides an 'r -> r' based on the type 'x'.
 instance (TypeFoldStep (x ': xs :: [a]) r, TypeFold xs r) => TypeFold (x ': xs :: [a]) r where
-  foldT = foldStep @_ @(x : xs :: [a]) $ foldT @_ @xs
+  foldT = foldTStep @_ @(x : xs :: [a]) $ foldT @_ @xs
   {-# INLINE foldT #-}

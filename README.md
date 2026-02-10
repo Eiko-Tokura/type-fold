@@ -22,11 +22,20 @@ import GHC.TypeLits
 import Type.Fold
 
 instance TypeFoldStep ('[] :: [Natural]) Integer where
-  foldStep _ = 0
+  foldTStep _ = 0
 
 instance KnownNat n => TypeFoldStep (n ': xs) Integer where
-  foldStep = (natVal (Proxy @n) +)
+  foldTStep = (natVal (Proxy @n) +)
 
 example :: Integer
 example = foldT @_ @[1, 2, 3]
+```
+
+## `RequiredTypeArguments`
+
+If you enable `RequiredTypeArguments`, (which requires `ghc >= 9.10.1`), you can use the helpers `foldT_` and `foldTStep_` to avoid the `@_ @MyType` noise:
+
+```
+example :: Integer
+example = foldT_ [1, 2, 3]
 ```
