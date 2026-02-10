@@ -63,7 +63,6 @@ instance TypeFoldStep ('[] :: [a]) r => TypeFold ('[] :: [a]) r where
   foldT = foldStep @_ @('[] :: [a]) ()
   {-# INLINE foldT #-}
 
-instance (TypeFoldStep (x ': xs :: [a]) r, TypeFold x (r -> r), TypeFold xs r) => TypeFold (x ': xs :: [a]) r where
-  foldT = foldStep @_ @(x : xs :: [a])
-        $ (foldT_ x :: r -> r) (foldT_ xs)
+instance (TypeFoldStep (x ': xs :: [a]) r, TypeFold xs r) => TypeFold (x ': xs :: [a]) r where
+  foldT = foldStep @_ @(x : xs :: [a]) $ foldT_ xs
   {-# INLINE foldT #-}
