@@ -5,6 +5,11 @@
 {-# LANGUAGE ScopedTypeVariables    #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE CPP                    #-}
+{-# LANGUAGE DataKinds              #-}
+{-# LANGUAGE TypeOperators          #-}
+{-# LANGUAGE FlexibleInstances      #-}
+{-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE UndecidableInstances   #-}
 #if __GLASGOW_HASKELL__ >= 910
 {-# LANGUAGE RequiredTypeArguments  #-}
 #endif
@@ -50,3 +55,15 @@ foldT_ :: forall t -> TypeFold t r => r
 foldT_ t = foldT @_ @t
 {-# INLINE foldT_ #-}
 #endif
+
+type instance RecursiveInput '[]      r = ()
+type instance RecursiveInput (x : xs) r = r
+
+instance TypeFoldStep ('[] :: [a]) r => TypeFold ('[] :: [a]) r where
+  foldT = foldStep @_ @('[] :: [a]) ()
+  {-# INLINE foldT #-}
+
+instance (TypeFoldStep (x ': xs :: [a]) r, TypeFold x (r -> r), TypeFold xs r) => TypeFold (x ': xs :: [a]) r where
+  foldT = foldStep @_ @(x : xs :: [a])
+        $ (foldT_ x :: r -> r) (foldT_ xs)
+  {-# INLINE foldT #-}
